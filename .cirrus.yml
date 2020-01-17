@@ -2,6 +2,8 @@ docker_builder:
   env: 
     DOCKER_PASSWORD: "ENCRYPTED[234c3f694d2af8e8f3e4bb384ce84ff3693fb560314a33b4613c7981baf4e3142b242437efb2d88b29d9f84901592029]"
     DOCKER_USERNAME: "ENCRYPTED[2d375dee832ad3a30b1a50c20eab123330777f043d25a1e6b43ef3082265e3458ca8364258492ce9eef08ce6ac3c9be0]"
-  build_script: "curl -i -X POST -H \"Content-Type: application/json\" -d '{\"text\": \"Starting build: dioe/dioe-real-time-server\\n in branch: '$CIRRUS_BRANCH' \\n details: https://cirrus-ci.com/task/'$CIRRUS_TASK_ID'\"}' https://mm.dioe.at/hooks/9xkct75bzpbn3cm1kiut3jx1ur && docker build --cache-from dioe/dioe-real-time-server --tag dioe/dioe-real-time-server ."
+  notify_start_script: "curl -i -X POST -H \"Content-Type: application/json\" -d '{\"text\": \"Starting build: dioe/dioe-real-time-server\\n in branch: '$CIRRUS_BRANCH' \\n details: https://cirrus-ci.com/task/'$CIRRUS_TASK_ID'\"}' https://mm.dioe.at/hooks/9xkct75bzpbn3cm1kiut3jx1ur"
+  build_script: "docker build --cache-from dioe/dioe-real-time-server --tag dioe/dioe-real-time-server ."
   login_script: "docker login --username $DOCKER_USERNAME --password $DOCKER_PASSWORD"
-  push_script: "test $CIRRUS_BRANCH == \"master\" && docker push dioe/dioe-real-time-server && curl -i -X POST -H \"Content-Type: application/json\" -d '{\"text\": \"Cirrus CI built and pushed dioe/dioe-real-time-server\\n details: https://cirrus-ci.com/task/'$CIRRUS_TASK_ID'\"}' https://mm.dioe.at/hooks/9xkct75bzpbn3cm1kiut3jx1ur\n"
+  push_script: "test $CIRRUS_BRANCH == \"master\" && docker push dioe/dioe-real-time-server"
+  notify_finish_script: "curl -i -X POST -H \"Content-Type: application/json\" -d '{\"text\": \"Cirrus CI built and pushed dioe/dioe-real-time-server\\n details: https://cirrus-ci.com/task/'$CIRRUS_TASK_ID'\"}' https://mm.dioe.at/hooks/9xkct75bzpbn3cm1kiut3jx1ur\n"
