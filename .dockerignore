@@ -1,0 +1,9 @@
+.git
+Dockerfile
+.DS_Store
+.gitignore
+.gitlab-ci.yml
+env-dev.env
+node_modules/*
+dist/*
+.idea
