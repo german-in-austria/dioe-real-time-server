@@ -10,6 +10,7 @@ const websocket = socketIo({
   path: '/updates'
 })
 
+
 websocket.on('connect', async (sock) => {
   console.log('a user connected')
   console.log(sock.handshake.headers.cookie)
