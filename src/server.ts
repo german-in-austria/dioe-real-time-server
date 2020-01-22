@@ -42,27 +42,28 @@ websocket.on('connect', async (socket) => {
     })
   }
   socket.on('disconnect', () => {
-    if (connections[socket.id].transcript_id !== null) {
+    const oldConnection = Object.assign({}, connections[socket.id])
+    delete connections[socket.id]
+    emitMessage(socket.server, {
+      type: 'user_disconnected',
+      user: oldConnection
+    })
+    if (oldConnection.transcript_id !== null) {
       emitMessage(websocket, {
         type: 'close_transcript',
         app: 'transcribe',
-        user: connections[socket.id],
-        transcript_id: connections[socket.id].transcript_id as number
+        user: oldConnection,
+        transcript_id: oldConnection.transcript_id as number
       })
       emitMessage(socket.server, {
         type: 'list_open_transcripts',
         transcripts: getLockedTranscripts(connections),
-        user: connections[socket.id]
+        user: oldConnection
       })
     }
     emitMessage(socket.server, {
-      type: 'user_disconnected',
-      user: connections[socket.id]
-    })
-    delete connections[socket.id]
-    emitMessage(socket.server, {
       type: 'list_connected_users',
-      user: connections[socket.id],
+      user: oldConnection,
       users: Object.values(connections)
     })
     console.log(connections)
