@@ -1,6 +1,10 @@
 import * as socketIo from 'socket.io'
-import * as util from 'util'
-import axios from 'axios'
+import { getLockedTranscripts } from './service/transcript'
+import connections from './service/connections'
+import { getBackEndAuth } from './service/backend'
+import handleClientMessage, { emitMessage, sendMessage, emitToAllButSelf } from './service/messages'
+
+console.log(process.env.NODE_ENV)
 
 const websocket = socketIo({
   origins: [
@@ -10,25 +14,58 @@ const websocket = socketIo({
   path: '/updates'
 })
 
-
-websocket.on('connect', async (sock) => {
-  console.log('a user connected')
-  console.log(sock.handshake.headers.cookie)
-  const x = await axios({
-    method: 'GET',
-    url: 'https://dioedb.dioe.at/routes/auth',
-    headers: {
-      'Cookie': sock.handshake.headers.cookie
+websocket.on('connect', async (socket) => {
+  const user = await getBackEndAuth(socket)
+  if (user !== null) {
+    connections[socket.id] = {
+      app: 'transcribe',
+      name: user.user_name,
+      user_id: user.user_id,
+      transcript_id: null
     }
-  })
-  console.log('req data', x.data)
-  sock.send('hello!')
-  websocket.emit('USER_CONNECTED', {
-    name: 'arni',
-    id: 1
-  })
-  sock.on('disconnect', () => {
-    console.log('disconnected!!')
+    emitToAllButSelf(socket, {
+      type: 'user_connected',
+      user: connections[socket.id]
+    })
+    emitMessage(socket.server, {
+      type: 'list_connected_users',
+      user: connections[socket.id],
+      users: Object.values(connections)
+    })
+    sendMessage(socket, {
+      type: 'list_open_transcripts',
+      transcripts: getLockedTranscripts(connections)
+    })
+    console.log(connections)
+    socket.on('message', (m) => {
+      handleClientMessage(m, socket)
+    })
+  }
+  socket.on('disconnect', () => {
+    if (connections[socket.id].transcript_id !== null) {
+      emitMessage(websocket, {
+        type: 'close_transcript',
+        app: 'transcribe',
+        user: connections[socket.id],
+        transcript_id: connections[socket.id].transcript_id as number
+      })
+      emitMessage(socket.server, {
+        type: 'list_open_transcripts',
+        transcripts: getLockedTranscripts(connections),
+        user: connections[socket.id]
+      })
+    }
+    emitMessage(socket.server, {
+      type: 'user_disconnected',
+      user: connections[socket.id]
+    })
+    delete connections[socket.id]
+    emitMessage(socket.server, {
+      type: 'list_connected_users',
+      user: connections[socket.id],
+      users: Object.values(connections)
+    })
+    console.log(connections)
   })
 })
 

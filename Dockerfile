@@ -14,7 +14,6 @@ WORKDIR /usr/src/app
 ## LIBRARIES
 COPY package.json /usr/src/app
 COPY package-lock.json /usr/src/app
-
 RUN npm install
 
 COPY . /usr/src/app
@@ -22,5 +21,6 @@ COPY . /usr/src/app
 RUN npm run build
 
 # START AND EXPOSE TO HOST-DAEMON
+ENV NODE_ENV=production
 EXPOSE 3000
 CMD ["node", "/usr/src/app/dist/server.js"]
