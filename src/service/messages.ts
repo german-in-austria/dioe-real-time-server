@@ -4,7 +4,7 @@ import connections from './connections'
 import { Message, MessageWithUser, ClientMessage, AppName } from './messages.d'
 
 export function sendMessage(sock: SocketIO.Socket, m: Message) {
-  return sock.send('message', m)
+  return sock.send(m)
 }
 
 export function emitMessage(server: SocketIO.Server, m: MessageWithUser) {
