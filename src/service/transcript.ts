@@ -1,5 +1,4 @@
-
-export type AppName = 'transcribe'|'anno'
+import { AppName } from './messages.d'
 import { Connections } from './connections'
 
 interface LockedTranscript {

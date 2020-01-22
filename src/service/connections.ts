@@ -1,4 +1,4 @@
-import { AppName } from './transcript'
+import { AppName } from './messages.d'
 
 export interface Connections {
   [ connection_id: string ]: {
