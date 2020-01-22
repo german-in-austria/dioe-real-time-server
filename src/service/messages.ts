@@ -51,7 +51,7 @@ type Message = MessageBase & (
  |MessageListUsers
 )
 
-type ClientMessage = Message & {
+export type ClientMessage = Message & {
   app: AppName
   transcript_id: number
 }
