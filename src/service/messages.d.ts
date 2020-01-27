@@ -1,3 +1,5 @@
+import { TranscriptAction } from './operations'
+
 type AppName = 'transcribe'|'anno'
 
 interface MessageBase {}
@@ -22,11 +24,11 @@ interface MessageOpenTranscript {
   app: AppName
 }
 
-interface MessageTranscriptOperation {
-  type: 'transcript_operation'
+interface MessageTranscriptAction {
+  type: 'transcript_action'
   app: AppName
   transcript_id: number
-  operation: any
+  action: TranscriptAction
 }
 
 interface MessageListTranscripts {
@@ -41,7 +43,7 @@ interface MessageListUsers {
 
 type Message = MessageBase & (
   MessageOpenTranscript
- |MessageTranscriptOperation
+ |MessageTranscriptAction
  |MessageCloseTranscript
  |MessageUserConnected
  |MessageUserDisconnected

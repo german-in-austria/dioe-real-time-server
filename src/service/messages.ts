@@ -1,5 +1,5 @@
 
-import { getLockedTranscripts } from './transcript'
+import { getOpenTranscripts } from './transcript'
 import connections from './connections'
 import { Message, MessageWithUser, ClientMessage, AppName } from './messages.d'
 
@@ -36,14 +36,14 @@ export default function handleClientMessage(m: ClientMessage, socket: SocketIO.S
     })
     emitMessage(socket.server, {
       type: 'list_open_transcripts',
-      transcripts: getLockedTranscripts(connections),
+      transcripts: getOpenTranscripts(connections),
       user: connections[socket.id]
     })
-  } else if (m.type === 'transcript_operation') {
+  } else if (m.type === 'transcript_action') {
     emitToAllButSelf(socket, {
-      type: 'transcript_operation',
+      type: 'transcript_action',
       app: m.app,
-      operation: m.operation,
+      action: m.action,
       transcript_id: m.transcript_id,
       user: connections[socket.id]
     })
@@ -57,7 +57,7 @@ export default function handleClientMessage(m: ClientMessage, socket: SocketIO.S
     })
     emitMessage(socket.server, {
       type: 'list_open_transcripts',
-      transcripts: getLockedTranscripts(connections),
+      transcripts: getOpenTranscripts(connections),
       user: connections[socket.id]
     })
   }

@@ -1,5 +1,5 @@
 import * as socketIo from 'socket.io'
-import { getLockedTranscripts } from './service/transcript'
+import { getOpenTranscripts } from './service/transcript'
 import connections from './service/connections'
 import { getBackEndAuth } from './service/backend'
 import handleClientMessage, { emitMessage, sendMessage, emitToAllButSelf } from './service/messages'
@@ -34,7 +34,7 @@ websocket.on('connect', async (socket) => {
     })
     sendMessage(socket, {
       type: 'list_open_transcripts',
-      transcripts: getLockedTranscripts(connections)
+      transcripts: getOpenTranscripts(connections)
     })
     console.log(connections)
     socket.on('message', (m) => {
@@ -57,7 +57,7 @@ websocket.on('connect', async (socket) => {
       })
       emitMessage(socket.server, {
         type: 'list_open_transcripts',
-        transcripts: getLockedTranscripts(connections),
+        transcripts: getOpenTranscripts(connections),
         user: oldConnection
       })
     }

@@ -10,7 +10,7 @@ interface LockedTranscript {
   }
 }
 
-export function getLockedTranscripts(cs: Connections): LockedTranscript[] {
+export function getOpenTranscripts(cs: Connections): LockedTranscript[] {
   return Object.values(cs)
     .filter(c => c.transcript_id !== null)
     .map(c => {
