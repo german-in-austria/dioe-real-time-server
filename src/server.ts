@@ -7,11 +7,14 @@ import handleClientMessage, { emitMessage, sendMessage, emitToAllButSelf } from 
 console.log(process.env.NODE_ENV)
 
 const websocket = socketIo({
-  origins: [
-    'http://localhost:8080',
-    'https://transcribe.dioe.at'
-  ],
-  path: '/updates'
+  origins:
+    process.env.ORIGINS !== undefined
+      ? process.env.ORIGINS.split(',')
+      : [
+        'http://localhost:8080',
+        'https://transcribe.dioe.at'
+      ],
+  path: process.env.PATH || '/updates'
 })
 
 websocket.on('connect', async (socket) => {

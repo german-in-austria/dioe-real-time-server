@@ -4,7 +4,7 @@
   "description": "a websocket server that distributes updates and messages to users and tools.",
   "main": "index.js",
   "scripts": {
-    "start": "node ./dist/server.js",
+    "start": "export $(cat production.env | xargs) && node ./dist/server.js",
     "build": "npm run clean && npm run lint && tsc",
     "dev": "export $(cat dev.env | xargs) && nodemon -e ts --watch src/ --exec 'npm run build && npm run start'",
     "lint": "tslint ./src/**/*.ts",
