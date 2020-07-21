@@ -14,7 +14,7 @@ const websocket = socketIo({
         'http://localhost:8080',
         'https://transcribe.dioe.at'
       ],
-  path: process.env.PATH || '/updates'
+  path: process.env.URL_PATH || '/updates'
 })
 
 websocket.on('connect', async (socket) => {
