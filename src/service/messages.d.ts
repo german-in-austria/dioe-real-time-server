@@ -14,20 +14,20 @@ interface MessageUserConnected {
 
 interface MessageCloseTranscript {
   type: 'close_transcript'
-  transcript_id: number
+  transcript_id: string
   app: AppName
 }
 
 interface MessageOpenTranscript {
   type: 'open_transcript'
-  transcript_id: number
+  transcript_id: string
   app: AppName
 }
 
 interface MessageTranscriptAction {
   type: 'transcript_action'
   app: AppName
-  transcript_id: number
+  transcript_id: string
   action: TranscriptAction
 }
 
@@ -53,7 +53,7 @@ type Message = MessageBase & (
 
 export type ClientMessage = Message & {
   app: AppName
-  transcript_id: number
+  transcript_id: string
 }
 
 type MessageWithUser = Message & {
