@@ -31,7 +31,7 @@
     "@types/socket.io": "^2.1.4",
     "axios": "^0.19.1",
     "cors": "^2.8.5",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "lodash": "^4.17.15",
     "nodemon": "^2.0.2",
     "socket.io": "^2.3.0",
